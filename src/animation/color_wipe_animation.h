@@ -12,6 +12,8 @@
 // small palette.
 class ColorWipeAnimation : public Animation {
 public:
+	const char *get_name() const override { return "Color Wipe"; }
+
 	void start() override {
 		phase_ = Phase::kFill;
 		time_in_phase_ = 0.0f;

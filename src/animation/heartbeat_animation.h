@@ -11,6 +11,8 @@
 // first) followed by a rest, repeating every kPeriodS seconds.
 class HeartbeatAnimation : public Animation {
 public:
+	const char *get_name() const override { return "Heartbeat"; }
+
 	void start() override {
 		time_ = 0.0f;
 	}

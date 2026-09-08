@@ -15,6 +15,8 @@
 // reversing.
 class PingPongAnimation : public Animation {
 public:
+	const char *get_name() const override { return "Ping Pong"; }
+
 	void start() override {
 		age_ = 0.0f;
 		moving_to_tip_ = true;

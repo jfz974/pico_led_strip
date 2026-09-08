@@ -16,6 +16,9 @@ class Animation {
 public:
 	virtual ~Animation() = default;
 
+	// Short human-readable name, e.g. for logging which animation is active.
+	virtual const char *get_name() const = 0;
+
 	// Called once when the animation becomes active; (re)sets its state.
 	virtual void start() {}
 

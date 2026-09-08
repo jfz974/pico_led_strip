@@ -23,6 +23,8 @@ without touching the main loop:
 
 - [src/animation/animation.h](src/animation/animation.h) defines the
   `Animation` interface:
+  - `get_name()` -- short human-readable name, used for logging which
+    animation is active.
   - `start()` -- (re)initializes the animation's state; called once when it
     becomes active.
   - `update(dt)` -- advances internal state by `dt` seconds.
@@ -66,12 +68,17 @@ pull-up -- see `btn1` in [diagram.json](diagram.json)) is debounced in
 software by [src/debounced_button.h](src/debounced_button.h). Each
 `DebouncedButton::consume_press()` returning `true` (once per physical
 press) advances `current_animation` to the next entry in the array, wrapping
-around, and calls `start()` on the newly selected animation.
+around. Loading an animation (both this initial selection and every
+button-triggered switch) goes through `main.cpp`'s `load_animation()` helper,
+which calls `start()` and then `printf`s `get_name()` over stdio (USB/UART)
+so the active animation is visible in the serial monitor.
 
 ### Adding a new animation
 
 1. Create `src/animation/<name>_animation.h` with a class `<Name>Animation : public Animation`
-   implementing `update()` and `render()` (and `start()` if it needs to reset
-   state). Reuse [easing.h](src/easing.h) if it needs an S-curve.
+   implementing `get_name()`, `update()`, and `render()` (and `start()` if it
+   needs to reset state). Reuse [easing.h](src/easing.h) if it needs an
+   S-curve.
 2. `#include` it in `main.cpp`, add an instance, and append a pointer to it
-   in the `animations[]` array -- the button will pick it up automatically.
+   in the `animations[]` array -- the button (and the load-time log) will
+   pick it up automatically.

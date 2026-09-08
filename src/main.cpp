@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
@@ -22,6 +24,11 @@ namespace {
 
 constexpr uint kStripPins[kNumStrips] = {2, 3, 4, 5};
 constexpr uint kButtonPin = 6;
+
+void load_animation(Animation *animation) {
+	animation->start();
+	printf("Loaded animation: %s\n", animation->get_name());
+}
 
 } // namespace
 
@@ -53,7 +60,7 @@ int main() {
 	constexpr uint kNumAnimations = sizeof(animations) / sizeof(animations[0]);
 
 	uint current_animation = 0;
-	animations[current_animation]->start();
+	load_animation(animations[current_animation]);
 
 	DebouncedButton button(kButtonPin);
 
@@ -66,7 +73,7 @@ int main() {
 
 		if (button.consume_press()) {
 			current_animation = (current_animation + 1) % kNumAnimations;
-			animations[current_animation]->start();
+			load_animation(animations[current_animation]);
 		}
 
 		Animation *animation = animations[current_animation];

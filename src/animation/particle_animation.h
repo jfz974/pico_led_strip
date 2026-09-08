@@ -15,6 +15,8 @@
 // tip, instead of moving at a constant speed.
 class ParticleAnimation : public Animation {
 public:
+	const char *get_name() const override { return "Particle"; }
+
 	void start() override {
 		for (auto &p : particles_) {
 			p.active = false;
