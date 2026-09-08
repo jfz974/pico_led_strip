@@ -41,6 +41,13 @@
       "left": 140,
       "rotate": 315,
       "attrs": { "pixels": "400" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": -180,
+      "left": -160,
+      "attrs": { "color": "blue", "label": "Next anim" }
     }
   ],
   "connections": [
@@ -58,6 +65,9 @@
 
     ["pico:GP5", "strip4:DIN", "green", ["h0"]],
     ["pico:VBUS", "strip4:VDD", "red", ["h0"]],
-    ["pico:GND.4", "strip4:VSS", "black", ["h0"]]
+    ["pico:GND.4", "strip4:VSS", "black", ["h0"]],
+
+    ["pico:GP6", "btn1:1.l", "green", ["h0"]],
+    ["pico:GND.5", "btn1:2.l", "black", ["h0"]]
   ]
 }

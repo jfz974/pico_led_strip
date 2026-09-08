@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "animation.h"
+#include "easing.h"
 
 // Throws a white comet-style particle from the shared center of the cross
 // (pixel index kLedsPerStrip - 1, the far end from DIN) out to the outer
@@ -75,13 +76,6 @@ private:
 		float age = 0.0f; // seconds since spawn
 		bool active = false;
 	};
-
-	// Smoothstep: 0 at s=0, 1 at s=1, zero slope (zero speed) at both ends
-	// and maximum slope (peak speed) at the midpoint -- the classic S-curve
-	// profile.
-	static float ease_in_out(float s) {
-		return s * s * (3.0f - 2.0f * s);
-	}
 
 	void spawn_particle() {
 		for (auto &p : particles_) {
