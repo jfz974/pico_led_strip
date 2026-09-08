@@ -54,7 +54,12 @@ private:
 	static constexpr float kPi = 3.14159265358979323846f;
 	static constexpr float kWaveWidth = kLedsPerStrip / 2.0f * 1.2f; // half the strip, 20% wider
 	static constexpr float kSpeed = 350.0f;                          // LEDs per second
-	static constexpr float kTravelStart = static_cast<float>(kLedsPerStrip - 1) + kWaveWidth;
+	// The sine bump is naturally zero right at the strip's edge, so the
+	// wave can start exactly at the center end with no dead run-up. The tip
+	// end still needs a full width of "off-strip" travel so the trailing
+	// edge can fade all the way out before the wave loops -- without it,
+	// the wave would visibly cut off (pop to black) mid-fade at the tip.
+	static constexpr float kTravelStart = static_cast<float>(kLedsPerStrip - 1);
 	static constexpr float kTravelEnd = -kWaveWidth;
 
 	static constexpr uint8_t kColorR = 40;
