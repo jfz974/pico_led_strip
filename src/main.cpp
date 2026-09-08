@@ -9,10 +9,17 @@
 // only differs electrically by running at 12V and having a redundant backup
 // data line, neither of which is modeled here).
 //
-// The strips are arranged in the diagram as 4 branches of a diagonal cross,
-// all meeting at pixel index 0 (the DIN end). This animation throws a white
-// comet-style particle from that shared center down every branch at once,
-// each with a fading tail behind it.
+// The strips are arranged in the diagram as 4 branches of a diagonal cross.
+// Pixel index (kLedsPerStrip - 1), the far end from DIN, sits at the shared
+// crossing point in the middle; index 0 (the DIN end) sits at the outer tip
+// of each branch. This animation throws a white comet-style particle from
+// that shared center down every branch at once, each with a fading tail
+// behind it, counting DOWN from the last index to 0 as it travels outward.
+//
+// Each particle follows an S-curve speed profile: it eases in from a stop at
+// the center, reaches peak speed around the midpoint of the branch, then
+// eases back down to a stop right at the tip, instead of moving at a
+// constant speed.
 
 namespace {
 
@@ -21,22 +28,28 @@ constexpr uint kLedsPerStrip = 400;
 constexpr uint kStripPins[kNumStrips] = {2, 3, 4, 5};
 
 constexpr uint64_t kSpawnIntervalUs = 500000; // 500 ms
-constexpr float kParticleSpeed = 300.0f;      // LEDs per second
+constexpr float kTravelDurationS = 1.3f;      // seconds to cross the whole branch
 constexpr int kTailLength = 20;               // pixels of fading tail behind the head
-constexpr uint kMaxParticles = 8;             // headroom above kLedsPerStrip / (speed*interval)
+constexpr uint kMaxParticles = 8;             // headroom above kTravelDurationS / spawn interval
 
 struct Particle {
-	float position = 0.0f;
+	float age = 0.0f; // seconds since spawn
 	bool active = false;
 };
 
 Particle particles[kMaxParticles];
 
+// Smoothstep: 0 at s=0, 1 at s=1, zero slope (zero speed) at both ends and
+// maximum slope (peak speed) at the midpoint -- the classic S-curve profile.
+float ease_in_out(float s) {
+	return s * s * (3.0f - 2.0f * s);
+}
+
 void spawn_particle() {
 	for (auto &p : particles) {
 		if (!p.active) {
 			p.active = true;
-			p.position = 0.0f;
+			p.age = 0.0f;
 			return;
 		}
 	}
@@ -45,8 +58,8 @@ void spawn_particle() {
 void update_particles(float dt) {
 	for (auto &p : particles) {
 		if (!p.active) continue;
-		p.position += kParticleSpeed * dt;
-		if (p.position - kTailLength > kLedsPerStrip) {
+		p.age += dt;
+		if (p.age >= kTravelDurationS) {
 			p.active = false;
 		}
 	}
@@ -60,10 +73,13 @@ void render(Ws2812Strip<kLedsPerStrip> *strips[kNumStrips]) {
 	for (auto &p : particles) {
 		if (!p.active) continue;
 
-		int head = static_cast<int>(p.position);
+		float s = p.age / kTravelDurationS; // 0 at spawn, 1 at the tip
+		float eased = ease_in_out(s);
+		float position = static_cast<float>(kLedsPerStrip - 1) * (1.0f - eased);
+		int head = static_cast<int>(position);
 
 		for (int t = 0; t <= kTailLength; t++) {
-			int idx = head - t;
+			int idx = head + t; // tail trails toward the center (higher index)
 			if (idx < 0 || idx >= static_cast<int>(kLedsPerStrip)) continue;
 
 			float fade = 1.0f - static_cast<float>(t) / kTailLength;
