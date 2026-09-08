@@ -79,7 +79,7 @@ without touching the main loop:
   - [twinkle_animation.h](src/animation/twinkle_animation.h) -- `TwinkleAnimation`,
     random confetti-style sparkles that flash and fade on a dark background.
   - [fast_twinkle_animation.h](src/animation/fast_twinkle_animation.h) -- `FastTwinkleAnimation`,
-    up to 50 unsynchronized white points (5% chance per dark slot per frame
+    up to 150 unsynchronized white points (8% chance per dark slot per frame
     to ignite), each with a quick 3-4 frame attack and slower 6-8 frame
     release, dimly lighting each point's immediate neighbor pixels at 20% of
     its intensity. New points must land at least 3 pixels from every other

@@ -7,9 +7,9 @@
 #include "animation.h"
 #include "pico/time.h"
 
-// A denser, faster twinkle than TwinkleAnimation: up to 50 independent
+// A denser, faster twinkle than TwinkleAnimation: up to 150 independent
 // white points scattered across all 4 branches, each igniting at a random,
-// unsynchronized moment -- every currently dark slot has a 5% chance each
+// unsynchronized moment -- every currently dark slot has an 8% chance each
 // frame to start a new point. Each point does a quick attack (3-4 frames,
 // 0% -> 100%) followed by a slower release (6-8 frames, 100% -> 0%), both
 // randomly chosen per point and counted in actual update() calls rather
@@ -85,8 +85,8 @@ private:
 		int release_frames = 6;
 	};
 
-	static constexpr uint kMaxPoints = 50;
-	static constexpr float kSpawnChancePerFrame = 0.05f; // a dark spot's chance to start, per frame
+	static constexpr uint kMaxPoints = 150;
+	static constexpr float kSpawnChancePerFrame = 0.08f; // a dark spot's chance to start, per frame
 	static constexpr int kMinSpacing = 3;                // min pixels between active points on a branch
 	static constexpr float kNeighborFraction = 0.20f;
 
