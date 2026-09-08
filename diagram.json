@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "author": "Julien Fezandelle",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-pi-pico",
+      "id": "pico",
+      "top": -20,
+      "left": -80,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led-strip",
+      "id": "strip1",
+      "top": 60,
+      "left": 140,
+      "rotate": 45,
+      "attrs": { "pixels": "400" }
+    },
+    {
+      "type": "wokwi-led-strip",
+      "id": "strip2",
+      "top": 60,
+      "left": 140,
+      "rotate": 135,
+      "attrs": { "pixels": "400" }
+    },
+    {
+      "type": "wokwi-led-strip",
+      "id": "strip3",
+      "top": 60,
+      "left": 140,
+      "rotate": 225,
+      "attrs": { "pixels": "400" }
+    },
+    {
+      "type": "wokwi-led-strip",
+      "id": "strip4",
+      "top": 60,
+      "left": 140,
+      "rotate": 315,
+      "attrs": { "pixels": "400" }
+    }
+  ],
+  "connections": [
+    ["pico:GP2", "strip1:DIN", "green", ["h0"]],
+    ["pico:VBUS", "strip1:VDD", "red", ["h0"]],
+    ["pico:GND.1", "strip1:VSS", "black", ["h0"]],
+
+    ["pico:GP3", "strip2:DIN", "green", ["h0"]],
+    ["pico:VBUS", "strip2:VDD", "red", ["h0"]],
+    ["pico:GND.2", "strip2:VSS", "black", ["h0"]],
+
+    ["pico:GP4", "strip3:DIN", "green", ["h0"]],
+    ["pico:VBUS", "strip3:VDD", "red", ["h0"]],
+    ["pico:GND.3", "strip3:VSS", "black", ["h0"]],
+
+    ["pico:GP5", "strip4:DIN", "green", ["h0"]],
+    ["pico:VBUS", "strip4:VDD", "red", ["h0"]],
+    ["pico:GND.4", "strip4:VSS", "black", ["h0"]]
+  ]
+}
