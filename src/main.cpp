@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 
 #include "pico/stdio_usb.h"
 #include "pico/stdlib.h"
@@ -28,18 +29,26 @@
 // data line, neither of which is modeled here).
 //
 // LED animations implement the Animation interface (animation.h); main()
-// drives whichever one is currently active and cycles to the next one on
-// each button press, so new animations can be dropped into the list below
-// without touching the rest of this file's loop.
+// drives whichever one is currently active and switches to the next one
+// either on a button press or automatically every kAutoSwitchIntervalUs,
+// so new animations can be dropped into the list below without touching
+// the rest of this file's loop.
 
 namespace {
 
 constexpr uint kStripPins[kNumStrips] = {2, 3, 4, 5};
 constexpr uint kButtonPin = 6;
+constexpr uint64_t kAutoSwitchIntervalUs = 120ull * 1000000ull; // 2 minutes
 
 void load_animation(Animation *animation) {
 	animation->start();
 	printf("Loaded animation: %s\n", animation->get_name());
+}
+
+// Picks a random animation index in [0, count) other than `current`.
+uint pick_different_animation(uint current, uint count) {
+	uint offset = 1 + static_cast<uint>(rand() % (count - 1));
+	return (current + offset) % count;
 }
 
 } // namespace
@@ -102,6 +111,9 @@ int main() {
 		&wave_animation,
 	};
 	constexpr uint kNumAnimations = sizeof(animations) / sizeof(animations[0]);
+	printf("%u animations available\n", kNumAnimations);
+
+	srand(static_cast<unsigned>(time_us_32()));
 
 	uint current_animation = 0;
 	load_animation(animations[current_animation]);
@@ -109,15 +121,25 @@ int main() {
 	DebouncedButton button(kButtonPin);
 
 	uint64_t last_frame_us = time_us_64();
+	uint64_t last_switch_us = last_frame_us;
 
 	while (true) {
 		uint64_t now_us = time_us_64();
 		float dt = static_cast<float>(now_us - last_frame_us) / 1e6f;
 		last_frame_us = now_us;
 
+		bool switch_requested = false;
 		if (button.consume_press()) {
 			current_animation = (current_animation + 1) % kNumAnimations;
+			switch_requested = true;
+		} else if (now_us - last_switch_us >= kAutoSwitchIntervalUs) {
+			current_animation = pick_different_animation(current_animation, kNumAnimations);
+			switch_requested = true;
+		}
+
+		if (switch_requested) {
 			load_animation(animations[current_animation]);
+			last_switch_us = now_us;
 		}
 
 		Animation *animation = animations[current_animation];

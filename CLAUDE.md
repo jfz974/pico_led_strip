@@ -114,15 +114,24 @@ without touching the main loop:
   active animation, then calls `show()` on every strip itself -- animations
   never push pixels to the hardware directly.
 
-### Selecting animations (button)
+### Selecting animations (button + auto-switch timer)
 
-A push button on `kButtonPin` (GP6, wired to GND with the pin's internal
-pull-up -- see `btn1` in [diagram.json](diagram.json)) is debounced in
-software by [src/debounced_button.h](src/debounced_button.h). Each
-`DebouncedButton::consume_press()` returning `true` (once per physical
-press) advances `current_animation` to the next entry in the array, wrapping
-around. Loading an animation (both this initial selection and every
-button-triggered switch) goes through `main.cpp`'s `load_animation()` helper,
+`current_animation` can change two ways:
+
+- **Button**: a push button on `kButtonPin` (GP6, wired to GND with the
+  pin's internal pull-up -- see `btn1` in [diagram.json](diagram.json)) is
+  debounced in software by [src/debounced_button.h](src/debounced_button.h).
+  Each `DebouncedButton::consume_press()` returning `true` (once per
+  physical press) advances to the next entry in the array, wrapping around.
+- **Timer**: if `kAutoSwitchIntervalUs` (2 minutes) passes with no button
+  press, `main()` auto-switches to a *random* animation, guaranteed
+  different from the current one (`pick_different_animation()` picks a
+  random nonzero offset into the array rather than rejection-sampling).
+  A button press resets this timer too, so it's really "2 minutes since the
+  last switch of either kind," not a fixed wall-clock schedule.
+
+Loading an animation (the initial selection and every subsequent switch,
+manual or automatic) goes through `main.cpp`'s `load_animation()` helper,
 which calls `start()` and then `printf`s `get_name()` over stdio (USB/UART)
 so the active animation is visible in the serial monitor.
 
