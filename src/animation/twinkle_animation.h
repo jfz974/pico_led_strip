@@ -61,9 +61,9 @@ private:
 		bool active = false;
 	};
 
-	static constexpr uint kMaxTwinkles = 24;
+	static constexpr uint kMaxTwinkles = 40;
 	static constexpr float kLifetimeS = 0.6f;
-	static constexpr float kSpawnChancePerSecond = 20.0f; // expected spawns/sec while slots free
+	static constexpr float kSpawnChancePerSecond = 32.0f; // expected spawns/sec while slots free
 
 	static float random01() {
 		return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);

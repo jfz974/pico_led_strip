@@ -6,6 +6,7 @@
 
 #include "animation/animation.h"
 #include "animation/breathing_animation.h"
+#include "animation/color_meteor_rain_animation.h"
 #include "animation/color_wipe_animation.h"
 #include "animation/fire_animation.h"
 #include "animation/heartbeat_animation.h"
@@ -17,6 +18,7 @@
 #include "animation/rotating_sweep_animation.h"
 #include "animation/theater_chase_animation.h"
 #include "animation/twinkle_animation.h"
+#include "animation/wave_animation.h"
 #include "debounced_button.h"
 
 // 4x WS2815 LED strips, 400 LEDs each, driven over PIO with WS2812-compatible
@@ -71,12 +73,14 @@ int main() {
 	PingPongAnimation ping_pong_animation;
 	RotatingSweepAnimation rotating_sweep_animation;
 	MeteorRainAnimation meteor_rain_animation;
+	ColorMeteorRainAnimation color_meteor_rain_animation;
 	RainbowCycleAnimation rainbow_cycle_animation;
 	TheaterChaseAnimation theater_chase_animation;
 	LarsonScannerAnimation larson_scanner_animation;
 	TwinkleAnimation twinkle_animation;
 	FireAnimation fire_animation;
 	BreathingAnimation breathing_animation;
+	WaveAnimation wave_animation;
 
 	Animation *animations[] = {
 		&particle_animation,
@@ -85,12 +89,14 @@ int main() {
 		&ping_pong_animation,
 		&rotating_sweep_animation,
 		&meteor_rain_animation,
+		&color_meteor_rain_animation,
 		&rainbow_cycle_animation,
 		&theater_chase_animation,
 		&larson_scanner_animation,
 		&twinkle_animation,
 		&fire_animation,
 		&breathing_animation,
+		&wave_animation,
 	};
 	constexpr uint kNumAnimations = sizeof(animations) / sizeof(animations[0]);
 

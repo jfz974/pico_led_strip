@@ -52,6 +52,10 @@ without touching the main loop:
     per-branch meteors at random intervals/speed/brightness, constant speed
     (no easing) -- an ongoing "rain" vs. `ParticleAnimation`'s single synced
     pulse.
+  - [color_meteor_rain_animation.h](src/animation/color_meteor_rain_animation.h) -- `ColorMeteorRainAnimation`,
+    a `MeteorRainAnimation` variant: each meteor gets its own random hue
+    (via [color.h](src/color.h)) instead of white, a wider speed spread, and
+    a denser spawn rate/more concurrent meteors.
   - [rainbow_cycle_animation.h](src/animation/rainbow_cycle_animation.h) -- `RainbowCycleAnimation`,
     a hue gradient along each branch that drifts over time.
   - [theater_chase_animation.h](src/animation/theater_chase_animation.h) -- `TheaterChaseAnimation`,
@@ -67,14 +71,21 @@ without touching the main loop:
   - [breathing_animation.h](src/animation/breathing_animation.h) -- `BreathingAnimation`,
     one calm color fading in/out on a slow sine curve -- a single even
     breath, vs. `HeartbeatAnimation`'s sharp double-pulse.
+  - [wave_animation.h](src/animation/wave_animation.h) -- `WaveAnimation`, a
+    single wave continuously sweeping center->tip and looping, playing on
+    one branch at a time and alternating to the next branch each pass
+    (never more than one branch lit at once); the wave is 60% of the strip's
+    length wide, with intensity across that width following one half period
+    of a sine wave (0 at both edges, peak in the middle).
 
   Use these as the reference for how a new animation should be structured:
   all state (particle pools, timers, phase, etc.) lives as private members,
   not file-scope globals, so multiple animations can coexist without
-  stepping on each other. Shared per-frame math (the S-curve easing
-  function) lives in [src/easing.h](src/easing.h) (deliberately kept outside
-  `src/animation/` since it's a generic math helper, not itself an
-  animation) rather than being duplicated in each animation that needs it.
+  stepping on each other. Shared per-frame math lives outside
+  `src/animation/` (it's generic, not itself an animation) rather than being
+  duplicated in each animation that needs it: the S-curve easing function in
+  [src/easing.h](src/easing.h), and HSV-to-RGB conversion in
+  [src/color.h](src/color.h).
 
 - [src/main.cpp](src/main.cpp) owns the 4 `LedStrip` instances, an array of
   `Animation*` (one per concrete animation above), and a `current_animation`
@@ -99,7 +110,7 @@ so the active animation is visible in the serial monitor.
 1. Create `src/animation/<name>_animation.h` with a class `<Name>Animation : public Animation`
    implementing `get_name()`, `update()`, and `render()` (and `start()` if it
    needs to reset state). Reuse [easing.h](src/easing.h) if it needs an
-   S-curve.
+   S-curve, or [color.h](src/color.h) if it needs HSV-to-RGB.
 2. `#include` it in `main.cpp`, add an instance, and append a pointer to it
    in the `animations[]` array -- the button (and the load-time log) will
    pick it up automatically.
