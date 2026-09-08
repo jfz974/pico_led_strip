@@ -19,3 +19,10 @@ target_include_directories(pico_led_strip PRIVATE ../src)
 target_link_libraries(pico_led_strip pico_stdlib hardware_pio)
 pico_generate_pio_header(pico_led_strip ../src/ws2812.pio)
 pico_add_extra_outputs(pico_led_strip)
+
+# Enable both stdio backends rather than relying on the SDK's global
+# defaults: native USB CDC is Wokwi's documented zero-config Serial Monitor
+# path for the Pico (no diagram.json wiring needed), and UART0 is kept as a
+# secondary path (wired to $serialMonitor on GP0/GP1 in diagram.json).
+pico_enable_stdio_usb(pico_led_strip 1)
+pico_enable_stdio_uart(pico_led_strip 1)

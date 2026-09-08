@@ -1,5 +1,6 @@
 #include <cstdio>
 
+#include "pico/stdio_usb.h"
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
@@ -34,6 +35,16 @@ void load_animation(Animation *animation) {
 
 int main() {
 	stdio_init_all();
+
+	// Give the host up to ~2s to open the USB CDC port so early log lines
+	// (like the startup message right below) aren't lost before a terminal
+	// attaches. Proceeds regardless once the deadline passes.
+	absolute_time_t usb_wait_deadline = make_timeout_time_ms(2000);
+	while (!stdio_usb_connected() && !time_reached(usb_wait_deadline)) {
+		sleep_ms(10);
+	}
+
+	printf("pico_led_strip: starting\n");
 
 	LedStrip strip0(kStripPins[0]);
 	LedStrip strip1(kStripPins[1]);

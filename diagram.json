@@ -68,6 +68,9 @@
     ["pico:GND.4", "strip4:VSS", "black", ["h0"]],
 
     ["pico:GP6", "btn1:1.l", "green", ["h0"]],
-    ["pico:GND.5", "btn1:2.l", "black", ["h0"]]
+    ["pico:GND.5", "btn1:2.l", "black", ["h0"]],
+
+    ["$serialMonitor:RX", "pico:GP0", "", ["h0"]],
+    ["$serialMonitor:TX", "pico:GP1", "", ["h0"]]
   ]
 }
