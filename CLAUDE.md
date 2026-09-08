@@ -46,6 +46,27 @@ without touching the main loop:
   - [ping_pong_animation.h](src/animation/ping_pong_animation.h) -- `PingPongAnimation`,
     a single dot with a two-sided fading trail bouncing between center and
     tip on the same S-curve profile.
+  - [rotating_sweep_animation.h](src/animation/rotating_sweep_animation.h) -- `RotatingSweepAnimation`,
+    a radar-like beam continuously rotating branch to branch.
+  - [meteor_rain_animation.h](src/animation/meteor_rain_animation.h) -- `MeteorRainAnimation`,
+    per-branch meteors at random intervals/speed/brightness, constant speed
+    (no easing) -- an ongoing "rain" vs. `ParticleAnimation`'s single synced
+    pulse.
+  - [rainbow_cycle_animation.h](src/animation/rainbow_cycle_animation.h) -- `RainbowCycleAnimation`,
+    a hue gradient along each branch that drifts over time.
+  - [theater_chase_animation.h](src/animation/theater_chase_animation.h) -- `TheaterChaseAnimation`,
+    classic every-3rd-LED marquee chase, cycling colors each pass.
+  - [larson_scanner_animation.h](src/animation/larson_scanner_animation.h) -- `LarsonScannerAnimation`,
+    the Knight Rider red eye, constant-speed (no easing) bounce -- deliberately
+    snappier than `PingPongAnimation`'s S-curve bounce.
+  - [twinkle_animation.h](src/animation/twinkle_animation.h) -- `TwinkleAnimation`,
+    random confetti-style sparkles that flash and fade on a dark background.
+  - [fire_animation.h](src/animation/fire_animation.h) -- `FireAnimation`,
+    a Fire2012-style heat simulation (cooling + drift + sparking), flame
+    radiating outward from the shared center.
+  - [breathing_animation.h](src/animation/breathing_animation.h) -- `BreathingAnimation`,
+    one calm color fading in/out on a slow sine curve -- a single even
+    breath, vs. `HeartbeatAnimation`'s sharp double-pulse.
 
   Use these as the reference for how a new animation should be structured:
   all state (particle pools, timers, phase, etc.) lives as private members,
