@@ -1,12 +1,12 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
-#include "animation.h"
-#include "color_wipe_animation.h"
+#include "animation/animation.h"
+#include "animation/color_wipe_animation.h"
+#include "animation/heartbeat_animation.h"
+#include "animation/particle_animation.h"
+#include "animation/ping_pong_animation.h"
 #include "debounced_button.h"
-#include "heartbeat_animation.h"
-#include "particle_animation.h"
-#include "ping_pong_animation.h"
 
 // 4x WS2815 LED strips, 400 LEDs each, driven over PIO with WS2812-compatible
 // timing (WS2815 shares the same one-wire protocol as WS2812/NeoPixel; it
