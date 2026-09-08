@@ -8,6 +8,7 @@
 #include "animation/breathing_animation.h"
 #include "animation/color_meteor_rain_animation.h"
 #include "animation/color_wipe_animation.h"
+#include "animation/fast_twinkle_animation.h"
 #include "animation/fire_animation.h"
 #include "animation/heartbeat_animation.h"
 #include "animation/larson_scanner_animation.h"
@@ -78,6 +79,7 @@ int main() {
 	TheaterChaseAnimation theater_chase_animation;
 	LarsonScannerAnimation larson_scanner_animation;
 	TwinkleAnimation twinkle_animation;
+	FastTwinkleAnimation fast_twinkle_animation;
 	FireAnimation fire_animation;
 	BreathingAnimation breathing_animation;
 	WaveAnimation wave_animation;
@@ -94,6 +96,7 @@ int main() {
 		&theater_chase_animation,
 		&larson_scanner_animation,
 		&twinkle_animation,
+		&fast_twinkle_animation,
 		&fire_animation,
 		&breathing_animation,
 		&wave_animation,

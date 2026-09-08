@@ -16,6 +16,19 @@ picotool) are pinned in [.vscode/settings.json](.vscode/settings.json)'s
 the "Build" task in [.vscode/tasks.json](.vscode/tasks.json), which runs
 `cmake --build build`.
 
+## Frame rate
+
+The main loop runs at **~15 fps, not ~60** as the `sleep_ms(16)` in
+[src/main.cpp](src/main.cpp) might suggest: `show()` on all 4 strips blocks
+for ~48ms/frame on its own (400 LEDs * 24 bits * 1.25us/bit per strip,
+times 4, sequentially -- WS2812 is a fixed-rate serial protocol, there's no
+way to push pixels out faster). Adding the 16ms sleep on top yields
+~64ms/frame. Keep this in mind when tuning animation timing: durations
+expressed in seconds (most animations) already account for this via `dt`,
+but anything counted in frames (see `FastTwinkleAnimation` below) advances
+once per `update()` call regardless of wall-clock time, so its speed is
+inherently tied to this ~15 fps rate.
+
 ## Animation pattern
 
 Animations follow a small Strategy pattern so new ones can be dropped in
@@ -65,6 +78,14 @@ without touching the main loop:
     snappier than `PingPongAnimation`'s S-curve bounce.
   - [twinkle_animation.h](src/animation/twinkle_animation.h) -- `TwinkleAnimation`,
     random confetti-style sparkles that flash and fade on a dark background.
+  - [fast_twinkle_animation.h](src/animation/fast_twinkle_animation.h) -- `FastTwinkleAnimation`,
+    up to 50 unsynchronized white points (5% chance per dark slot per frame
+    to ignite), each with a quick 3-4 frame attack and slower 6-8 frame
+    release, dimly lighting each point's immediate neighbor pixels at 20% of
+    its intensity. New points must land at least 3 pixels from every other
+    active point on the same branch. The envelope is counted in actual
+    `update()` calls rather than wall-clock time (see "Frame rate" above),
+    so its pacing is tied to the main loop's rate rather than real seconds.
   - [fire_animation.h](src/animation/fire_animation.h) -- `FireAnimation`,
     a Fire2012-style heat simulation (cooling + drift + sparking), flame
     radiating outward from the shared center.
