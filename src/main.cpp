@@ -125,6 +125,11 @@ int main() {
 			strips[i]->show();
 		}
 
-		sleep_ms(16); // ~60 fps refresh
+		// Not the frame pacer it looks like: show() on all 4 strips already
+		// blocks for ~48ms/frame (400 LEDs * 24 bits * 1.25us/bit, times 4,
+		// sequentially -- WS2812 is a fixed-rate serial protocol, there's no
+		// way to push pixels out faster). Adding this sleep on top yields
+		// ~64ms/frame, i.e. ~15 fps, not ~60.
+		sleep_ms(16);
 	}
 }
