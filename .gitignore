@@ -1,1 +1,2 @@
-build/
+build/*
+!build/pico_led_strip.elf
