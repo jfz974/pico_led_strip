@@ -16,6 +16,23 @@ picotool) are pinned in [.vscode/settings.json](.vscode/settings.json)'s
 the "Build" task in [.vscode/tasks.json](.vscode/tasks.json), which runs
 `cmake --build build`.
 
+## Pinout
+
+| Pico pin | Function                              |
+| -------- | -------------------------------------- |
+| GP2      | Strip 0 DIN (`kStripPins[0]`)           |
+| GP3      | Strip 1 DIN (`kStripPins[1]`)           |
+| GP4      | Strip 2 DIN (`kStripPins[2]`)           |
+| GP5      | Strip 3 DIN (`kStripPins[3]`)           |
+| GP6      | Next-animation push button (`kButtonPin`), other leg to GND, internal pull-up |
+| VBUS     | +5V to each strip's VDD                |
+| GND      | Common ground to each strip's VSS and to the button |
+| GP0/GP1  | Serial monitor RX/TX (Wokwi simulation only) |
+
+Pin assignments live in [src/main.cpp](src/main.cpp)'s `kStripPins` and
+`kButtonPin` constants; see [diagram.json](diagram.json) for the full wiring
+diagram.
+
 ## Frame rate
 
 The main loop runs at **~15 fps, not ~60** as the `sleep_ms(16)` in
