@@ -11,6 +11,36 @@
         "isDefault": true
       },
       "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Configure Release",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-S", "${workspaceFolder}/project",
+        "-B", "${workspaceFolder}/build",
+        "-DCMAKE_BUILD_TYPE=Release"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Release",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Configure Release", "Build"],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Upload",
+      "type": "shell",
+      "command": "C:/Users/Julien F/.pico-sdk/picotool/2.3.0/picotool/picotool.exe",
+      "args": [
+        "load", "-u", "-v", "-x", "-f",
+        "${workspaceFolder}/build/pico_led_strip.elf"
+      ],
+      "dependsOrder": "sequence",
+      "dependsOn": ["Build Release"],
+      "problemMatcher": []
     }
   ]
 }

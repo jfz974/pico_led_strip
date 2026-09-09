@@ -9,12 +9,22 @@ the Wokwi wiring/layout.
 ## Build
 
 Plain pico-sdk + CMake + Ninja (no PlatformIO/Arduino) -- see
-[project/CMakeLists.txt](project/CMakeLists.txt). This machine's toolchain
-paths (shared pico-sdk checkout, arm-none-eabi-gcc, ninja, prebuilt
-picotool) are pinned in [.vscode/settings.json](.vscode/settings.json)'s
-`cmake.configureSettings`. Build via the VS Code CMake Tools extension, or
+[project/CMakeLists.txt](project/CMakeLists.txt). The Pico SDK itself is
+vendored in-tree as the `pico-sdk/` git submodule (see
+[.gitmodules](.gitmodules)); after cloning, run
+`git submodule update --init --recursive` to pull it (and the SDK's own
+`lib/tinyusb` submodule, needed for USB stdio) in. This machine's toolchain
+paths (arm-none-eabi-gcc, ninja, prebuilt picotool) are pinned in
+[.vscode/settings.json](.vscode/settings.json)'s `cmake.configureSettings`. Build via the VS Code CMake Tools extension, or
 the "Build" task in [.vscode/tasks.json](.vscode/tasks.json), which runs
-`cmake --build build`.
+`cmake --build build`. "Build Release" reconfigures `build/` with
+`-DCMAKE_BUILD_TYPE=Release` first, then runs "Build" -- this is where
+`pico_add_extra_outputs` (in [project/CMakeLists.txt](project/CMakeLists.txt))
+emits `build/pico_led_strip.elf`/`.uf2`/`.bin`/`.hex`. "Upload" depends on
+"Build Release" and flashes `pico_led_strip.elf` to the board over USB via
+`picotool load -u -v -x -f` (force the board into BOOTSEL over its USB reset
+interface, load only if changed, verify, then reboot into the new firmware)
+-- no manual BOOTSEL-button held reset needed.
 
 ## Pinout
 

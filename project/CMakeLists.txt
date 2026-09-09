@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
-# Shared Pico SDK checkout used by the sibling music_box firmware project on
-# this machine.
-set(PICO_SDK_PATH "${CMAKE_CURRENT_LIST_DIR}/../../Documents/music_box/pico-sdk" CACHE PATH "Path to the Pico SDK")
+# Vendored as a git submodule at ../pico-sdk (see .gitmodules).
+set(PICO_SDK_PATH "${CMAKE_CURRENT_LIST_DIR}/../pico-sdk" CACHE PATH "Path to the Pico SDK")
 include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
 
 project(pico_led_strip C CXX ASM)
